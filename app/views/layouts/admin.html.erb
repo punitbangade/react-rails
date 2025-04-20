@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin Dashboard | E-Commerce Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e',
+              },
+              secondary: {
+                50: '#f8fafc',
+                100: '#f1f5f9',
+                200: '#e2e8f0',
+                300: '#cbd5e1',
+                400: '#94a3b8',
+                500: '#64748b',
+                600: '#475569',
+                700: '#334155',
+                800: '#1e293b',
+                900: '#0f172a',
+              },
+              accent: {
+                50: '#fffbeb',
+                100: '#fef3c7',
+                200: '#fde68a',
+                300: '#fcd34d',
+                400: '#fbbf24',
+                500: '#f59e0b',
+                600: '#d97706',
+                700: '#b45309',
+                800: '#92400e',
+                900: '#78350f',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="bg-gray-100 h-full">
+    <div class="min-h-screen flex flex-col md:flex-row">
+      <!-- Sidebar for desktop -->
+      <div class="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 bg-gray-900 text-white shadow-xl">
+        <!-- Sidebar header -->
+        <div class="flex items-center justify-center h-16 px-4 bg-gray-800 border-b border-gray-700">
+          <a href="<%= admin_dashboard_path %>" class="flex items-center">
+            <div class="h-8 w-8 rounded-md bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
+              <i class="fas fa-shopping-bag text-white text-sm"></i>
+            </div>
+            <span class="ml-2 text-lg font-semibold">Admin Panel</span>
+          </a>
+        </div>
+
+        <!-- Sidebar content -->
+        <div class="flex-1 flex flex-col overflow-y-auto pt-5 pb-4">
+          <div class="flex-1 px-3 space-y-1">
+            <!-- Dashboard link -->
+            <a href="<%= admin_dashboard_path %>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 <%= controller_name == 'dashboard' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %>">
+              <i class="fas fa-tachometer-alt mr-3 flex-shrink-0 h-5 w-5 <%= controller_name == 'dashboard' ? 'text-white' : 'text-gray-400 group-hover:text-white' %>"></i>
+              Dashboard
+            </a>
+
+            <!-- Content Management Section -->
+            <div class="pt-5 pb-2">
+              <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Content Management
+              </h3>
+            </div>
+
+            <!-- Products link -->
+            <a href="<%= admin_products_path %>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 <%= controller_name == 'products' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %>">
+              <i class="fas fa-box mr-3 flex-shrink-0 h-5 w-5 <%= controller_name == 'products' ? 'text-white' : 'text-gray-400 group-hover:text-white' %>"></i>
+              Products
+            </a>
+
+            <!-- Categories link -->
+            <a href="<%= admin_categories_path %>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 <%= controller_name == 'categories' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %>">
+              <i class="fas fa-tags mr-3 flex-shrink-0 h-5 w-5 <%= controller_name == 'categories' ? 'text-white' : 'text-gray-400 group-hover:text-white' %>"></i>
+              Categories
+            </a>
+
+            <!-- Sales Section -->
+            <div class="pt-5 pb-2">
+              <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Sales
+              </h3>
+            </div>
+
+            <!-- Orders link -->
+            <a href="<%= admin_orders_path %>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 <%= controller_name == 'orders' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %>">
+              <i class="fas fa-shopping-cart mr-3 flex-shrink-0 h-5 w-5 <%= controller_name == 'orders' ? 'text-white' : 'text-gray-400 group-hover:text-white' %>"></i>
+              Orders
+            </a>
+
+            <!-- Users Section -->
+            <div class="pt-5 pb-2">
+              <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                Users
+              </h3>
+            </div>
+
+            <!-- Users link -->
+            <a href="<%= admin_users_path %>" class="group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 <%= controller_name == 'users' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %>">
+              <i class="fas fa-users mr-3 flex-shrink-0 h-5 w-5 <%= controller_name == 'users' ? 'text-white' : 'text-gray-400 group-hover:text-white' %>"></i>
+              Users
+            </a>
+          </div>
+        </div>
+
+        <!-- Sidebar footer -->
+        <div class="flex-shrink-0 border-t border-gray-700 p-4">
+          <div class="flex-shrink-0 w-full">
+            <div class="flex items-center justify-between">
+              <a href="<%= root_path %>" class="text-sm font-medium text-gray-300 hover:text-white flex items-center transition-colors duration-200">
+                <i class="fas fa-store mr-2"></i> Visit Store
+              </a>
+              <a href="<%= logout_path %>" data-method="delete" class="text-sm font-medium text-gray-300 hover:text-white flex items-center transition-colors duration-200">
+                <i class="fas fa-sign-out-alt mr-2"></i> Sign out
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile header -->
+      <div class="md:hidden bg-gray-900 text-white w-full fixed top-0 z-10 shadow-md">
+        <div class="flex items-center justify-between h-16 px-4">
+          <div class="flex items-center">
+            <button type="button" class="text-gray-300 hover:text-white focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+            <a href="<%= admin_dashboard_path %>" class="ml-3 flex items-center">
+              <div class="h-7 w-7 rounded-md bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                <i class="fas fa-shopping-bag text-white text-xs"></i>
+              </div>
+              <span class="ml-2 text-lg font-semibold">Admin Panel</span>
+            </a>
+          </div>
+          <div class="flex items-center space-x-4">
+            <a href="<%= root_path %>" class="text-gray-300 hover:text-white p-2 transition-colors duration-200">
+              <i class="fas fa-store"></i>
+            </a>
+            <a href="<%= logout_path %>" data-method="delete" class="text-gray-300 hover:text-white p-2 transition-colors duration-200">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="md:hidden fixed inset-0 z-20 bg-gray-900 bg-opacity-98 hidden">
+        <div class="pt-20 pb-6 px-4 space-y-1 overflow-y-auto max-h-screen">
+          <a href="<%= admin_dashboard_path %>" class="block px-4 py-3 rounded-lg text-base font-medium <%= controller_name == 'dashboard' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %> transition-all duration-200">
+            <i class="fas fa-tachometer-alt mr-3"></i> Dashboard
+          </a>
+
+          <div class="pt-6 pb-2">
+            <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              Content Management
+            </h3>
+          </div>
+
+          <a href="<%= admin_products_path %>" class="block px-4 py-3 rounded-lg text-base font-medium <%= controller_name == 'products' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %> transition-all duration-200">
+            <i class="fas fa-box mr-3"></i> Products
+          </a>
+
+          <a href="<%= admin_categories_path %>" class="block px-4 py-3 rounded-lg text-base font-medium <%= controller_name == 'categories' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %> transition-all duration-200">
+            <i class="fas fa-tags mr-3"></i> Categories
+          </a>
+
+          <div class="pt-6 pb-2">
+            <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              Sales
+            </h3>
+          </div>
+
+          <a href="<%= admin_orders_path %>" class="block px-4 py-3 rounded-lg text-base font-medium <%= controller_name == 'orders' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %> transition-all duration-200">
+            <i class="fas fa-shopping-cart mr-3"></i> Orders
+          </a>
+
+          <div class="pt-6 pb-2">
+            <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              Users
+            </h3>
+          </div>
+
+          <a href="<%= admin_users_path %>" class="block px-4 py-3 rounded-lg text-base font-medium <%= controller_name == 'users' ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md' : 'text-gray-300 hover:bg-gray-800 hover:text-white' %> transition-all duration-200">
+            <i class="fas fa-users mr-3"></i> Users
+          </a>
+
+          <div class="pt-8 pb-2 flex justify-center">
+            <button type="button" class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 shadow-md transition-all duration-200" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+              <i class="fas fa-times mr-2"></i> Close Menu
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="md:pl-64 flex flex-col flex-1 w-full">
+        <main class="flex-1">
+          <div class="py-6 px-4 sm:px-6 lg:px-8 mt-16 md:mt-0">
+            <!-- Flash messages -->
+            <% flash.each do |message_type, message| %>
+              <%
+                bg_color = case message_type
+                  when 'success', 'notice' then 'bg-green-50 border-green-500 text-green-700'
+                  when 'danger', 'error' then 'bg-red-50 border-red-500 text-red-700'
+                  when 'warning', 'alert' then 'bg-yellow-50 border-yellow-500 text-yellow-700'
+                  else 'bg-blue-50 border-blue-500 text-blue-700'
+                end
+
+                icon_class = case message_type
+                  when 'success', 'notice' then 'fas fa-check-circle text-green-400'
+                  when 'danger', 'error' then 'fas fa-exclamation-circle text-red-400'
+                  when 'warning', 'alert' then 'fas fa-exclamation-triangle text-yellow-400'
+                  else 'fas fa-info-circle text-blue-400'
+                end
+              %>
+              <div class="rounded-md p-4 mb-4 border-l-4 <%= bg_color %> relative" role="alert">
+                <div class="flex">
+                  <div class="flex-shrink-0">
+                    <i class="<%= icon_class %> text-xl"></i>
+                  </div>
+                  <div class="ml-3">
+                    <p class="text-sm font-medium"><%= message %></p>
+                  </div>
+                  <div class="ml-auto pl-3">
+                    <div class="-mx-1.5 -my-1.5">
+                      <button type="button" class="inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 <%= bg_color.gsub('bg-', 'focus:ring-').split(' ').first %>" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                        <span class="sr-only">Dismiss</span>
+                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+
+            <!-- Page content -->
+            <%= yield %>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- JavaScript dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+    <!-- Custom JavaScript for admin panel -->
+    <script>
+      // Function to toggle mobile menu
+      function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenu.classList.toggle('hidden');
+      }
+
+      // Function to toggle collapsible sections
+      function toggleCollapsible(id) {
+        const content = document.getElementById(id);
+        content.classList.toggle('hidden');
+
+        const icon = document.getElementById(id + '-icon');
+        if (icon) {
+          icon.classList.toggle('fa-chevron-down');
+          icon.classList.toggle('fa-chevron-right');
+        }
+      }
+    </script>
+  </body>
+</html>

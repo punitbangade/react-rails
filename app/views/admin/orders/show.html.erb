@@ -1,0 +1,192 @@
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold text-gray-900">Order #<%= @order.id %></h1>
+  <%= link_to admin_orders_path, class: "flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" do %>
+    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+    </svg>
+    Back to Orders
+  <% end %>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+  <div>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Order Information</h3>
+      </div>
+      <div class="border-t border-gray-200">
+        <dl>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Order ID</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">#<%= @order.id %></dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Customer</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              <%= link_to admin_user_path(@order.user), class: "text-indigo-600 hover:text-indigo-900" do %>
+                <%= @order.user.full_name %>
+              <% end %>
+            </dd>
+          </div>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Email</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @order.user.email %></dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Date</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @order.created_at.strftime('%B %d, %Y at %I:%M %p') %></dd>
+          </div>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Status</dt>
+            <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+              <% case @order.status %>
+              <% when 'pending' %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Pending</span>
+              <% when 'processing' %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Processing</span>
+              <% when 'completed' %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>
+              <% when 'cancelled' %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Cancelled</span>
+              <% else %>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"><%= @order.status.capitalize %></span>
+              <% end %>
+            </dd>
+          </div>
+          <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Payment Method</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @order.payment_method ? @order.payment_method.titleize : 'Not specified' %></dd>
+          </div>
+          <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt class="text-sm font-medium text-gray-500">Payment ID</dt>
+            <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2"><%= @order.payment_id || 'Not available' %></dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Update Order Status</h3>
+      </div>
+      <div class="px-4 py-5 sm:p-6">
+        <%= form_with(model: [:admin, @order], local: true, class: "space-y-6") do |form| %>
+          <div class="space-y-2">
+            <%= form.label :status, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :status,
+              [
+                ['Pending', 'pending'],
+                ['Processing', 'processing'],
+                ['Completed', 'completed'],
+                ['Cancelled', 'cancelled']
+              ],
+              { selected: @order.status },
+              { class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50" }
+            %>
+          </div>
+          <%= form.submit "Update Status", class: "px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="md:col-span-2">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Order Items</h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr class="bg-gray-50">
+              <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Product</th>
+              <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Price</th>
+              <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Quantity</th>
+              <th scope="col" class="px-6 py-3.5 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @order_items.any? %>
+              <% @order_items.each do |item| %>
+                <tr class="hover:bg-gray-50 transition-colors duration-150">
+                  <td class="px-6 py-4">
+                    <div class="flex items-center">
+                      <% if item.product.image_url.present? %>
+                        <%= image_tag item.product.image_url, class: "h-10 w-10 rounded-md object-cover mr-3" %>
+                      <% else %>
+                        <div class="h-10 w-10 rounded-md bg-gray-100 flex items-center justify-center mr-3">
+                          <i class="fas fa-image text-gray-400"></i>
+                        </div>
+                      <% end %>
+                      <div>
+                        <div class="text-sm font-medium text-indigo-600"><%= item.product.name %></div>
+                        <%= link_to "View Product", admin_product_path(item.product), class: "text-xs text-gray-500" %>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$<%= sprintf('%.2f', item.price) %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= item.quantity %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$<%= sprintf('%.2f', item.price * item.quantity) %></td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="4" class="px-6 py-8 text-sm text-center text-gray-500">No items in this order</td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr class="bg-gray-50">
+              <td colspan="3" class="px-6 py-4 text-right text-sm font-medium text-gray-900">Total:</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">$<%= sprintf('%.2f', @order.total) %></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="md:col-span-1 space-y-6">
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Shipping Address</h3>
+      </div>
+      <div class="px-4 py-5 sm:p-6">
+        <% if @order.shipping_address.present? %>
+          <% shipping = JSON.parse(@order.shipping_address) %>
+          <div class="text-sm">
+            <p class="font-medium text-gray-900 mb-1"><%= shipping['fullName'] %></p>
+            <p class="text-gray-500 mb-1"><%= shipping['address'] %></p>
+            <p class="text-gray-500 mb-1"><%= shipping['city'] %>, <%= shipping['state'] %> <%= shipping['zipCode'] %></p>
+            <p class="text-gray-500"><%= shipping['country'] %></p>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-500">No shipping address provided</p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">Billing Address</h3>
+      </div>
+      <div class="px-4 py-5 sm:p-6">
+        <% if @order.billing_address.present? %>
+          <% billing = JSON.parse(@order.billing_address) %>
+          <div class="text-sm">
+            <p class="font-medium text-gray-900 mb-1"><%= billing['fullName'] %></p>
+            <p class="text-gray-500 mb-1"><%= billing['address'] %></p>
+            <p class="text-gray-500 mb-1"><%= billing['city'] %>, <%= billing['state'] %> <%= billing['zipCode'] %></p>
+            <p class="text-gray-500"><%= billing['country'] %></p>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-500">No billing address provided</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

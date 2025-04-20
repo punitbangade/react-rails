@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>E-Commerce Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e',
+              },
+              secondary: {
+                50: '#f8fafc',
+                100: '#f1f5f9',
+                200: '#e2e8f0',
+                300: '#cbd5e1',
+                400: '#94a3b8',
+                500: '#64748b',
+                600: '#475569',
+                700: '#334155',
+                800: '#1e293b',
+                900: '#0f172a',
+              },
+              accent: {
+                50: '#fffbeb',
+                100: '#fef3c7',
+                200: '#fde68a',
+                300: '#fcd34d',
+                400: '#fbbf24',
+                500: '#f59e0b',
+                600: '#d97706',
+                700: '#b45309',
+                800: '#92400e',
+                900: '#78350f',
+              }
+            },
+            animation: {
+              'gradient-x': 'gradient-x 15s ease infinite',
+              'gradient-y': 'gradient-y 15s ease infinite',
+              'gradient-xy': 'gradient-xy 15s ease infinite',
+              'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              'gradient-x': {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'left center'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'right center'
+                }
+              },
+              'gradient-y': {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'top center'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'bottom center'
+                }
+              },
+              'gradient-xy': {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'left top'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'right bottom'
+                }
+              },
+              'pulse': {
+                '0%, 100%': { opacity: 1 },
+                '50%': { opacity: 0.5 }
+              }
+            },
+            backdropBlur: {
+              xs: '2px',
+              lg: '16px',
+              xl: '24px',
+              '2xl': '40px',
+              '3xl': '64px',
+            }
+          }
+        }
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @layer components {
+        .btn-primary {
+          @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded transition duration-300;
+        }
+        .btn-secondary {
+          @apply bg-secondary-200 hover:bg-secondary-300 text-secondary-800 font-medium py-2 px-4 rounded transition duration-300;
+        }
+        .btn-accent {
+          @apply bg-accent-500 hover:bg-accent-600 text-white font-medium py-2 px-4 rounded transition duration-300;
+        }
+        .card {
+          @apply bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg;
+        }
+        .card-header {
+          @apply px-6 py-4 bg-secondary-50 border-b border-secondary-200;
+        }
+        .card-body {
+          @apply p-6;
+        }
+        .form-control {
+          @apply block w-full px-3 py-2 border border-secondary-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500;
+        }
+        .badge {
+          @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+        }
+        .badge-primary {
+          @apply bg-primary-100 text-primary-800;
+        }
+        .badge-success {
+          @apply bg-green-100 text-green-800;
+        }
+        .badge-warning {
+          @apply bg-yellow-100 text-yellow-800;
+        }
+        .badge-danger {
+          @apply bg-red-100 text-red-800;
+        }
+        .badge-info {
+          @apply bg-blue-100 text-blue-800;
+        }
+      }
+    </style>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body class="min-h-screen bg-gray-50">
+    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-header">
+      <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <%= link_to root_path, class: "flex items-center" do %>
+                <svg class="h-8 w-8 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="ml-2 text-xl font-bold text-gray-900">E-Commerce Store</span>
+              <% end %>
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <%= link_to "Home", root_path, class: "#{current_page?(root_path) ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+              <%= link_to "Products", products_path, class: "#{current_page?(products_path) ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" %>
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <%= link_to cart_path, class: "p-2 text-gray-500 hover:text-gray-700 relative" do %>
+              <span class="sr-only">Cart</span>
+              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <% if logged_in? && current_user.cart.order_items.any? %>
+                <span class="cart-count absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-primary-600 rounded-full"><%= current_user.cart.order_items.sum(:quantity) %></span>
+              <% end %>
+            <% end %>
+
+            <% if logged_in? %>
+              <div class="ml-3 relative">
+                <div>
+                  <button type="button" class="flex text-sm bg-white rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true" onclick="document.getElementById('user-dropdown').classList.toggle('hidden')">
+                    <span class="sr-only">Open user menu</span>
+                    <div class="h-8 w-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold"><%= current_user.first_name[0].upcase %></div>
+                  </button>
+                </div>
+                <div class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="user-dropdown">
+                  <div class="block px-4 py-2 text-sm text-gray-700 border-b border-gray-200">
+                    <div class="font-medium">Signed in as</div>
+                    <div class="truncate"><%= current_user.email %></div>
+                  </div>
+                  <%= link_to 'My Orders', orders_path, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+                  <% if current_user.admin? %>
+                    <%= link_to 'Admin Dashboard', admin_dashboard_path, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+                  <% end %>
+                  <div class="border-t border-gray-200"></div>
+                  <%= link_to 'Logout', logout_path, method: :delete, class: 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100' %>
+                </div>
+              </div>
+            <% else %>
+              <div class="flex items-center space-x-4">
+                <%= link_to login_path, class: "text-gray-500 hover:text-gray-700" do %>
+                  <span>Login</span>
+                <% end %>
+                <%= link_to signup_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" do %>
+                  <span>Sign Up</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500" aria-controls="mobile-menu" aria-expanded="false" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+              <span class="sr-only">Open main menu</span>
+              <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Mobile menu, show/hide based on menu state. -->
+      <div class="sm:hidden hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+          <%= link_to "Home", root_path, class: "#{current_page?(root_path) ? 'bg-primary-50 border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium" %>
+          <%= link_to "Products", products_path, class: "#{current_page?(products_path) ? 'bg-primary-50 border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium" %>
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-200">
+          <% if logged_in? %>
+            <div class="flex items-center px-4">
+              <div class="flex-shrink-0">
+                <div class="h-10 w-10 rounded-full bg-primary-600 flex items-center justify-center text-white font-semibold"><%= current_user.first_name[0].upcase %></div>
+              </div>
+              <div class="ml-3">
+                <div class="text-base font-medium text-gray-800"><%= current_user.full_name %></div>
+                <div class="text-sm font-medium text-gray-500"><%= current_user.email %></div>
+              </div>
+              <%= link_to cart_path, class: "ml-auto flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500" do %>
+                <span class="sr-only">View cart</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+              <% end %>
+            </div>
+            <div class="mt-3 space-y-1">
+              <%= link_to 'My Orders', orders_path, class: 'block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100' %>
+              <% if current_user.admin? %>
+                <%= link_to 'Admin Dashboard', admin_dashboard_path, class: 'block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100' %>
+              <% end %>
+              <%= link_to 'Logout', logout_path, method: :delete, class: 'block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100' %>
+            </div>
+          <% else %>
+            <div class="mt-3 space-y-1">
+              <%= link_to 'Login', login_path, class: 'block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100' %>
+              <%= link_to 'Sign Up', signup_path, class: 'block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16">
+      <% flash.each do |message_type, message| %>
+        <%
+          bg_color = case message_type
+            when 'success', 'notice' then 'bg-green-50 border-green-500 text-green-700'
+            when 'danger', 'error' then 'bg-red-50 border-red-500 text-red-700'
+            when 'warning', 'alert' then 'bg-yellow-50 border-yellow-500 text-yellow-700'
+            else 'bg-blue-50 border-blue-500 text-blue-700'
+          end
+
+          icon_class = case message_type
+            when 'success', 'notice' then 'fas fa-check-circle text-green-400'
+            when 'danger', 'error' then 'fas fa-exclamation-circle text-red-400'
+            when 'warning', 'alert' then 'fas fa-exclamation-triangle text-yellow-400'
+            else 'fas fa-info-circle text-blue-400'
+          end
+        %>
+        <div class="rounded-md p-4 mb-4 border-l-4 <%= bg_color %> relative" role="alert">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <i class="<%= icon_class %> text-xl"></i>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm font-medium"><%= message %></p>
+            </div>
+            <div class="ml-auto pl-3">
+              <div class="-mx-1.5 -my-1.5">
+                <button type="button" class="inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 <%= bg_color.gsub('bg-', 'focus:ring-').split(' ').first %>" onclick="this.parentElement.parentElement.parentElement.parentElement.remove()">
+                  <span class="sr-only">Dismiss</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
+
+    <footer class="bg-gray-800 text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <div class="flex items-center">
+              <svg class="h-8 w-8 text-primary-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="ml-2 text-xl font-bold">E-Commerce Store</span>
+            </div>
+            <p class="mt-2 text-gray-400">Your one-stop shop for all your needs.</p>
+            <div class="mt-4 flex space-x-6">
+              <a href="#" class="text-gray-400 hover:text-white">
+                <span class="sr-only">Facebook</span>
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <span class="sr-only">Instagram</span>
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" class="text-gray-400 hover:text-white">
+                <span class="sr-only">Twitter</span>
+                <i class="fab fa-twitter"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Quick Links</h3>
+            <ul class="mt-4 space-y-4">
+              <li><%= link_to 'Home', root_path, class: 'text-gray-400 hover:text-white transition duration-150 ease-in-out' %></li>
+              <li><%= link_to 'Products', products_path, class: 'text-gray-400 hover:text-white transition duration-150 ease-in-out' %></li>
+              <% if logged_in? %>
+                <li><%= link_to 'My Orders', orders_path, class: 'text-gray-400 hover:text-white transition duration-150 ease-in-out' %></li>
+              <% else %>
+                <li><%= link_to 'Login', login_path, class: 'text-gray-400 hover:text-white transition duration-150 ease-in-out' %></li>
+              <% end %>
+              <li><a href="#" class="text-gray-400 hover:text-white transition duration-150 ease-in-out">About Us</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wider">Contact Us</h3>
+            <ul class="mt-4 space-y-4">
+              <li class="flex">
+                <i class="fas fa-envelope text-gray-400 mt-1 mr-3"></i>
+                <span class="text-gray-400">info@ecommerce.com</span>
+              </li>
+              <li class="flex">
+                <i class="fas fa-phone-alt text-gray-400 mt-1 mr-3"></i>
+                <span class="text-gray-400">(123) 456-7890</span>
+              </li>
+              <li class="flex">
+                <i class="fas fa-map-marker-alt text-gray-400 mt-1 mr-3"></i>
+                <span class="text-gray-400">123 E-Commerce St.<br>Shopping City, SC 12345</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-12 border-t border-gray-700 pt-8">
+          <p class="text-gray-400 text-center">&copy; <%= Date.today.year %> E-Commerce Store. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

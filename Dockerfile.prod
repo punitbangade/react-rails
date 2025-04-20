@@ -1,0 +1,71 @@
+FROM ruby:2.7.8-slim AS builder
+
+# Install dependencies
+RUN apt-get update -qq && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    nodejs \
+    npm \
+    dos2unix
+
+# Set working directory
+WORKDIR /app
+
+# Install bundler
+RUN gem install bundler:2.3.26
+
+# Copy Gemfile and Gemfile.lock
+COPY Gemfile Gemfile.lock ./
+
+# Install gems without development and test dependencies
+RUN bundle config set --local without 'development test' && \
+    bundle install
+
+# Copy the rest of the application
+COPY . .
+
+# Fix line endings for scripts
+RUN find ./bin -type f -exec dos2unix {} \;
+
+# Set Rails environment to production
+ARG RAILS_ENV=production
+ENV RAILS_ENV=${RAILS_ENV}
+
+# Set Rails master key
+ARG RAILS_MASTER_KEY
+ENV RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+
+# Precompile assets
+RUN bundle exec rake assets:precompile
+
+# Remove unnecessary files
+RUN rm -rf node_modules tmp/cache app/assets vendor/assets spec
+
+# Second stage: create the final image
+FROM ruby:2.7.8-slim
+
+# Install runtime dependencies
+RUN apt-get update -qq && apt-get install -y \
+    libpq-dev \
+    nodejs \
+    dos2unix \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy from builder stage
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /app /app
+
+# Set environment variables
+ENV RAILS_ENV=production
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the Rails server
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
